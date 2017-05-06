@@ -118,7 +118,7 @@ class JsonWriter {
       // Extract digit
       remainder *= 10.0;
       error *= 10.0;
-      char currentDigit = char(remainder + 0.5);
+      char currentDigit = char(remainder + error);
       remainder -= static_cast<JsonFloat>(currentDigit);
 
       // Print

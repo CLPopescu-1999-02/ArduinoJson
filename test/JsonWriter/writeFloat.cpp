@@ -52,4 +52,12 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(9.01, "9.01");
     check(9.99, "9.99");
   }
+
+  SECTION("Three decimal places") {
+    check(0.001, "0.001");
+    check(0.999, "0.999");
+
+    check(9.001, "9.001");
+    check(9.999, "9.999");
+  }
 }
