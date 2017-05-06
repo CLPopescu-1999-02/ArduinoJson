@@ -95,8 +95,8 @@ class JsonWriter {
     if (Polyfills::isInfinity(value)) return writeRaw("Infinity");
 
     short powersOf10;
-    if (value > ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD ||
-        value < ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD) {
+    if (value >= ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD ||
+        value <= ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD) {
       powersOf10 = Polyfills::normalize(value);
     } else {
       powersOf10 = 0;
@@ -107,22 +107,23 @@ class JsonWriter {
     JsonFloat remainder = value - static_cast<JsonFloat>(int_part);
     writeInteger(int_part);
 
-    // Print the decimal point, but only if there are digits beyond
-    writeRaw('.');
+    if (remainder > error) {
+      // Print the decimal point, but only if there are digits beyond
+      writeRaw('.');
 
-    // make sure we write a zero
-    if (remainder < error) writeRaw('0');
+      // Extract digits from the remainder one at a time
+      while (remainder >= error) {
+        // Extract digit
+        remainder *= 10.0;
+        error *= 10.0;
+        char currentDigit = char(remainder + error);
+        remainder -= static_cast<JsonFloat>(currentDigit);
 
-    // Extract digits from the remainder one at a time
-    while (remainder >= error) {
-      // Extract digit
-      remainder *= 10.0;
-      error *= 10.0;
-      char currentDigit = char(remainder + error);
-      remainder -= static_cast<JsonFloat>(currentDigit);
-
-      // Print
-      writeRaw(char('0' + currentDigit));
+        // Print
+        writeRaw(char('0' + currentDigit));
+      }
+    } else if (powersOf10 == 0) {
+      writeRaw(".0");  // so that isFloat() will return true
     }
 
     if (powersOf10 < 0) {

@@ -35,7 +35,7 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(-inf, "-Infinity");
   }
 
-  SECTION("One decimal place") {
+  SECTION("#.#") {
     check(0.0, "0.0");
     check(0.1, "0.1");
     check(0.9, "0.9");
@@ -45,7 +45,7 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(9.9, "9.9");
   }
 
-  SECTION("Two decimal places") {
+  SECTION("#.##") {
     check(0.01, "0.01");
     check(0.99, "0.99");
 
@@ -53,11 +53,54 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(9.99, "9.99");
   }
 
-  SECTION("Three decimal places") {
+  SECTION("#.###") {
     check(0.001, "0.001");
     check(0.999, "0.999");
 
     check(9.001, "9.001");
     check(9.999, "9.999");
+  }
+
+  SECTION("#.####") {
+    check(0.0001, "0.0001");
+    check(0.9999, "0.9999");
+
+    check(9.0001, "9.0001");
+    check(9.9999, "9.9999");
+  }
+
+  SECTION("##.#") {
+    check(10.0, "10.0");
+    check(10.1, "10.1");
+    check(10.9, "10.9");
+
+    check(99.0, "99.0");
+    check(99.1, "99.1");
+    check(99.9, "99.9");
+  }
+
+  SECTION("###.#") {
+    check(100.0, "100.0");
+    check(100.1, "100.1");
+    check(100.9, "100.9");
+
+    check(999.0, "999.0");
+    check(999.1, "999.1");
+    check(999.9, "999.9");
+  }
+
+  SECTION("####.#") {
+    check(1000.0, "1000.0");
+    check(1000.1, "1000.1");
+    check(1000.9, "1000.9");
+
+    check(9999.0, "9999.0");
+    check(9999.1, "9999.1");
+    check(9999.9, "9999.9");
+  }
+
+  SECTION("#.#e#") {
+    check(1e6, "1e6");
+    check(1e7, "1e7");
   }
 }
