@@ -114,11 +114,11 @@ class JsonWriter {
     if (remainder < error) writeRaw('0');
 
     // Extract digits from the remainder one at a time
-    while (remainder > error) {
+    while (remainder >= error) {
       // Extract digit
       remainder *= 10.0;
       error *= 10.0;
-      char currentDigit = char(remainder);
+      char currentDigit = char(remainder + 0.5);
       remainder -= static_cast<JsonFloat>(currentDigit);
 
       // Print

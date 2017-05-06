@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <string.h>
 #include "../TypeTraits/EnableIf.hpp"
 #include "../TypeTraits/IsChar.hpp"
 

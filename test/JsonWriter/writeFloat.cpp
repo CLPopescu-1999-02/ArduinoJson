@@ -9,18 +9,18 @@
 #include <limits>
 #include <string>
 
+#include <ArduinoJson/Serialization/DynamicStringBuilder.hpp>
 #include <ArduinoJson/Serialization/JsonWriter.hpp>
-#include <ArduinoJson/Serialization/StaticStringBuilder.hpp>
 
 using namespace ArduinoJson::Internals;
 
 void check(double input, const std::string& expected) {
-  char output[1024];
-  StaticStringBuilder sb(output, sizeof(output));
-  JsonWriter<StaticStringBuilder> writer(sb);
+  std::string output;
+  DynamicStringBuilder<std::string> sb(output);
+  JsonWriter<DynamicStringBuilder<std::string> > writer(sb);
   writer.writeFloat(input);
-  REQUIRE(output == expected);
-  REQUIRE(writer.bytesWritten() == expected.size());
+  REQUIRE(writer.bytesWritten() == output.size());
+  CHECK(output == expected);
 }
 
 TEST_CASE("JsonWriter::writeFloat()") {
@@ -43,5 +43,13 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(9.0, "9.0");
     check(9.1, "9.1");
     check(9.9, "9.9");
+  }
+
+  SECTION("Two decimal places") {
+    check(0.01, "0.01");
+    check(0.99, "0.99");
+
+    check(9.01, "9.01");
+    check(9.99, "9.99");
   }
 }
