@@ -99,8 +99,17 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(9999.9, "9999.9");
   }
 
-  SECTION("#.#e#") {
+  SECTION("#e#") {
     check(1e6, "1e6");
-    check(1e7, "1e7");
+    check(1e-6, "1e-6");
+    check(9e9, "9e9");
+    check(9e-9, "9e-9");
+  }
+
+  SECTION("#e###") {
+    check(1e308, "1e308");
+    check(1e-308, "1e-308");
+    check(-1e308, "-1e308");
+    check(-1e-308, "-1e-308");
   }
 }
