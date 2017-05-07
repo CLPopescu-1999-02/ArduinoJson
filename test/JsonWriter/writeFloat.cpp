@@ -99,6 +99,18 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(9999.9, "9999.9");
   }
 
+  SECTION("######.#") {
+    check(100000.0, "100000.0");
+    check(100000.1, "100000.1");
+    check(999999.9, "999999.9");
+  }
+
+  SECTION("########.#") {
+    check(1000000.0, "1e6");
+    check(1000000.1, "1e6");
+    check(9999999.9, "1e7");
+  }
+
   SECTION("#e#") {
     check(1e6, "1e6");
     check(1e-6, "1e-6");
@@ -112,4 +124,8 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(-1e308, "-1e308");
     check(-1e-308, "-1e-308");
   }
+  /*
+    SECTION("Pi") {
+      check(3.14159265359, "3.14159265359");
+    }*/
 }

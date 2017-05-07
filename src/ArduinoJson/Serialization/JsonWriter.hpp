@@ -83,7 +83,7 @@ class JsonWriter {
   }
 
   void writeFloat(JsonFloat value) {
-    JsonFloat error = 1e-6;
+    JsonFloat error = 1e-10;
 
     if (Polyfills::isNaN(value)) return writeRaw("NaN");
 
@@ -94,16 +94,16 @@ class JsonWriter {
 
     if (Polyfills::isInfinity(value)) return writeRaw("Infinity");
 
-    short powersOf10;
-    if (value >= ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD ||
-        value <= ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD) {
-      powersOf10 = Polyfills::normalize(value);
+    int powersOf10;  // TODO: use short
+    if (value > 0 && (value >= ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD ||
+                      value <= ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD)) {
+      powersOf10 = Polyfills::normalize(value, error);
     } else {
       powersOf10 = 0;
     }
 
     // Extract the integer part of the value and print it
-    JsonUInt int_part = static_cast<JsonUInt>(value);
+    JsonUInt int_part = static_cast<JsonUInt>(value + error);
     JsonFloat remainder = value - static_cast<JsonFloat>(int_part);
     writeInteger(int_part);
 
