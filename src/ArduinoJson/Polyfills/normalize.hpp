@@ -59,47 +59,47 @@ int normalize(T& value, T& error) {
     powersOf10 += 1;
   }
 
-  if (value <= 1e-256) {
+  if (value < 1e-255) {
     value *= 1e256;
     error *= 10;
     powersOf10 -= 256;
   }
-  if (value <= 1e-128) {
+  if (value < 1e-127) {
     value *= 1e128;
     error *= 10;
     powersOf10 -= 128;
   }
-  if (value <= 1e-64) {
+  if (value < 1e-63) {
     value *= 1e64;
     error *= 10;
     powersOf10 -= 64;
   }
-  if (value <= 1e-32) {
+  if (value < 1e-31) {
     value *= 1e32;
     error *= 10;
     powersOf10 -= 32;
   }
-  if (value <= 1e-16) {
+  if (value < 1e-15) {
     value *= 1e16;
     error *= 10;
     powersOf10 -= 16;
   }
-  if (value <= 1e-8) {
+  if (value < 1e-7) {
     value *= 1e8;
     error *= 10;
     powersOf10 -= 8;
   }
-  if (value <= 1e-4) {
+  if (value < 1e-3) {
     value *= 1e4;
     error *= 10;
     powersOf10 -= 4;
   }
-  if (value <= 1e-2) {
+  if (value < 1e-1) {
     value *= 1e2;
     error *= 10;
     powersOf10 -= 2;
   }
-  if (value <= 1e-1) {
+  if (value < 1e0) {
     value *= 1e1;
     error *= 10;
     powersOf10 -= 1;

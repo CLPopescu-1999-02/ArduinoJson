@@ -103,7 +103,7 @@ class JsonWriter {
     }
 
     // Extract the integer part of the value and print it
-    JsonUInt int_part = static_cast<JsonUInt>(value + error);
+    JsonUInt int_part = static_cast<JsonUInt>(value);
     JsonFloat remainder = value - static_cast<JsonFloat>(int_part);
     writeInteger(int_part);
 
