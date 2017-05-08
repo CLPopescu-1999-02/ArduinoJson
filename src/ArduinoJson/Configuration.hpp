@@ -14,7 +14,7 @@
 
 // control the exponentiation threshold for big numbers
 #ifndef ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD
-#define ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD 1e6
+#define ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD 1e7
 #endif
 
 // control the exponentiation threshold for small numbers

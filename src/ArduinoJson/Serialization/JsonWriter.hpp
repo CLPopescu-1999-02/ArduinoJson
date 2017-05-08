@@ -98,7 +98,8 @@ class JsonWriter {
   }
 
   void writeFloat(JsonFloat value) {
-    const JsonUInt maxDecimalPart = 1000000;
+    const uint8_t maxDecimalPlaces = 7;
+    const JsonUInt maxDecimalPart = 10000000;
 
     if (Polyfills::isNaN(value)) return writeRaw("NaN");
 
@@ -134,7 +135,7 @@ class JsonWriter {
     writeInteger(integralPart);
     if (decimalPart) {
       writeRaw('.');
-      writeDecimals(decimalPart, 6);
+      writeDecimals(decimalPart, maxDecimalPlaces);
     }
 
     if (powersOf10 < 0) {
