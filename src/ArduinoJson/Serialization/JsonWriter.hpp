@@ -98,6 +98,8 @@ class JsonWriter {
   }
 
   void writeFloat(JsonFloat value) {
+    const JsonUInt maxDecimalPart = 1000000;
+
     if (Polyfills::isNaN(value)) return writeRaw("NaN");
 
     if (value < 0.0) {
@@ -110,28 +112,30 @@ class JsonWriter {
     // TODO: use short
     int powersOf10 = Polyfills::normalize(value);
 
-    // Extract the integer part of the value and print it
-    JsonUInt int_part = static_cast<JsonUInt>(value);
-    JsonFloat remainder = value - static_cast<JsonFloat>(int_part);
+    JsonUInt integralPart = static_cast<JsonUInt>(value);
+    JsonFloat remainder = value - static_cast<JsonFloat>(integralPart);
 
-    JsonUInt decimal_part = JsonUInt(remainder * 1e6);
-    remainder = remainder * 1e6 - decimal_part;
+    JsonUInt decimalPart = JsonUInt(remainder * maxDecimalPart);
+    remainder = remainder * maxDecimalPart - decimalPart;
 
+    // rounding
     if (remainder > 0.5) {
-      decimal_part++;
-      if (decimal_part >= 1000000) {
-        decimal_part -= 1000000;
-        int_part++;
-        if (powersOf10 > 0 && int_part >= 10) {
+      decimalPart++;
+      if (decimalPart >= maxDecimalPart) {
+        decimalPart -= maxDecimalPart;
+        integralPart++;
+        if (powersOf10 > 0 && integralPart >= 10) {
           powersOf10++;
-          int_part /= 10;
+          integralPart /= 10;
         }
       }
     }
 
-    writeInteger(int_part);
-    writeRaw('.');
-    writeDecimals(decimal_part, 6);
+    writeInteger(integralPart);
+    if (decimalPart) {
+      writeRaw('.');
+      writeDecimals(decimalPart, 6);
+    }
 
     if (powersOf10 < 0) {
       writeRaw("e-");
