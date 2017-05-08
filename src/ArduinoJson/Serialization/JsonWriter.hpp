@@ -14,6 +14,7 @@
 #include "../Polyfills/attributes.hpp"
 #include "../Polyfills/math.hpp"
 #include "../Polyfills/normalize.hpp"
+#include "../TypeTraits/FloatTraits.hpp"
 
 namespace ArduinoJson {
 namespace Internals {
@@ -82,9 +83,21 @@ class JsonWriter {
     }
   }
 
-  void writeFloat(JsonFloat value) {
-    JsonFloat error = 1e-10;
+  int8_t getDecimalPlaces(JsonFloat value) {
+    int8_t result = 0;
+    JsonFloat error = 1e-6;
+    while (value > error && result < 6) {
+      // Extract digit
+      value *= 10.0;
+      error *= 10.0;
+      char currentDigit = char(value);
+      value -= static_cast<JsonFloat>(currentDigit);
+      result++;
+    }
+    return result;
+  }
 
+  void writeFloat(JsonFloat value) {
     if (Polyfills::isNaN(value)) return writeRaw("NaN");
 
     if (value < 0.0) {
@@ -94,37 +107,33 @@ class JsonWriter {
 
     if (Polyfills::isInfinity(value)) return writeRaw("Infinity");
 
-    int powersOf10;  // TODO: use short
-    if (value > 0 && (value >= ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD ||
-                      value <= ARDUINOJSON_NEGATIVE_EXPONENTIATION_THRESHOLD)) {
-      powersOf10 = Polyfills::normalize(value, error);
-    } else {
-      powersOf10 = 0;
+    // TODO: use short
+    int powersOf10 = Polyfills::normalize(value);
+
+    // TODO: use byte
+    // TODO: used fixed decimal places depending on integer size
+    int8_t decimals = getDecimalPlaces(value);
+
+    {
+      JsonFloat bias =
+          TypeTraits::FloatTraits<JsonFloat>::make_float(0.5, -decimals);
+      value += bias;
+
+      if (powersOf10 > 0 && value > 10) {
+        powersOf10++;
+        value /= 10;
+      }
     }
 
     // Extract the integer part of the value and print it
     JsonUInt int_part = static_cast<JsonUInt>(value);
     JsonFloat remainder = value - static_cast<JsonFloat>(int_part);
+
     writeInteger(int_part);
-
-    if (remainder > error) {
-      // Print the decimal point, but only if there are digits beyond
-      writeRaw('.');
-
-      // Extract digits from the remainder one at a time
-      while (remainder >= error) {
-        // Extract digit
-        remainder *= 10.0;
-        error *= 10.0;
-        char currentDigit = char(remainder + error);
-        remainder -= static_cast<JsonFloat>(currentDigit);
-
-        // Print
-        writeRaw(char('0' + currentDigit));
-      }
-    } else if (powersOf10 == 0) {
-      writeRaw(".0");  // so that isFloat() will return true
-    }
+    writeRaw('.');
+    JsonUInt decimal_part = JsonUInt(
+        TypeTraits::FloatTraits<JsonFloat>::make_float(remainder, decimals));
+    writeDecimals(decimal_part, decimals);
 
     if (powersOf10 < 0) {
       writeRaw("e-");
@@ -146,6 +155,30 @@ class JsonWriter {
       *--ptr = static_cast<char>(value % 10 + '0');
       value /= 10;
     } while (value);
+
+    writeRaw(ptr);
+  }
+
+  void writeDecimals(JsonUInt value, int8_t n) {
+    // remove trailing zeros
+    while (value % 10 == 0 && n > 0) {
+      value /= 10;
+      n--;
+    }
+
+    if (!n) {
+      writeRaw('0');
+      return;
+    }
+
+    char buffer[22];
+    char *ptr = buffer + sizeof(buffer) - 1;
+
+    *ptr = 0;
+    while (n--) {
+      *--ptr = static_cast<char>(value % 10 + '0');
+      value /= 10;
+    }
 
     writeRaw(ptr);
   }

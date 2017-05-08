@@ -20,7 +20,7 @@ void check(double input, const std::string& expected) {
   JsonWriter<DynamicStringBuilder<std::string> > writer(sb);
   writer.writeFloat(input);
   REQUIRE(writer.bytesWritten() == output.size());
-  CHECK(output == expected);
+  CHECK(expected == output);
 }
 
 TEST_CASE("JsonWriter::writeFloat()") {
@@ -106,23 +106,23 @@ TEST_CASE("JsonWriter::writeFloat()") {
   }
 
   SECTION("########.#") {
-    check(1000000.0, "1e6");
-    check(1000000.1, "1e6");
-    check(9999999.9, "1e7");
+    check(1000000.0, "1.0e6");
+    check(1000000.1, "1.0e6");
+    check(9999999.9, "1.0e7");
   }
 
   SECTION("#e#") {
-    check(1e6, "1e6");
-    check(1e-6, "1e-6");
-    check(9e9, "9e9");
-    check(9e-9, "9e-9");
+    check(1e6, "1.0e6");
+    check(1e-6, "1.0e-6");
+    check(9e9, "9.0e9");
+    check(9e-9, "9.0e-9");
   }
 
   SECTION("#e###") {
-    check(1e308, "1e308");
-    check(1e-308, "1e-308");
-    check(-1e308, "-1e308");
-    check(-1e-308, "-1e-308");
+    check(1e308, "1.0e308");
+    check(1e-308, "1.0e-308");
+    check(-1e308, "-1.0e308");
+    check(-1e-308, "-1.0e-308");
   }
   /*
     SECTION("Pi") {
