@@ -110,30 +110,28 @@ class JsonWriter {
     // TODO: use short
     int powersOf10 = Polyfills::normalize(value);
 
-    // TODO: use byte
-    // TODO: used fixed decimal places depending on integer size
-    int8_t decimals = getDecimalPlaces(value);
-
-    {
-      JsonFloat bias =
-          TypeTraits::FloatTraits<JsonFloat>::make_float(0.5, -decimals);
-      value += bias;
-
-      if (powersOf10 > 0 && value > 10) {
-        powersOf10++;
-        value /= 10;
-      }
-    }
-
     // Extract the integer part of the value and print it
     JsonUInt int_part = static_cast<JsonUInt>(value);
     JsonFloat remainder = value - static_cast<JsonFloat>(int_part);
 
+    JsonUInt decimal_part = JsonUInt(remainder * 1e6);
+    remainder = remainder * 1e6 - decimal_part;
+
+    if (remainder > 0.5) {
+      decimal_part++;
+      if (decimal_part >= 1000000) {
+        decimal_part -= 1000000;
+        int_part++;
+        if (powersOf10 > 0 && int_part >= 10) {
+          powersOf10++;
+          int_part /= 10;
+        }
+      }
+    }
+
     writeInteger(int_part);
     writeRaw('.');
-    JsonUInt decimal_part = JsonUInt(
-        TypeTraits::FloatTraits<JsonFloat>::make_float(remainder, decimals));
-    writeDecimals(decimal_part, decimals);
+    writeDecimals(decimal_part, 6);
 
     if (powersOf10 < 0) {
       writeRaw("e-");
