@@ -4,8 +4,18 @@ ArduinoJson: change log
 HEAD
 ----
 
+* Removed the number of decimal places in float (issue #427)
 * Fixed error `IsBaseOf is not a member of ArduinoJson::TypeTraits` (issue #495)
 * Fixed error `forming reference to reference` (issue #495)
+
+**BREAKING CHANGES**
+
+| Old syntax                      | New syntax          |
+|---------------------------------|---------------------|
+| `double_with_n_digits(3.14, 2)` | `3.14`              |
+| `float_with_n_digits(3.14, 2)`  | `3.14f`             |
+| `obj.set("key", 3.14, 2)`       | `obj["key"] = 3.14` |
+| `arr.add(3.14, 2)`              | `arr.add(3.14)`     |
 
 v5.9.0
 ------
