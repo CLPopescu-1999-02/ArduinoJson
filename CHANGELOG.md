@@ -5,6 +5,7 @@ HEAD
 ----
 
 * Removed the number of decimal places in float (issue #427)
+* `JsonVariant::is<double>()` now returns true for integers 
 * Fixed error `IsBaseOf is not a member of ArduinoJson::TypeTraits` (issue #495)
 * Fixed error `forming reference to reference` (issue #495)
 
