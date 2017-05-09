@@ -117,7 +117,7 @@ class JsonWriter {
     JsonFloat remainder = value - static_cast<JsonFloat>(integralPart);
 
     JsonUInt decimalPart = JsonUInt(remainder * maxDecimalPart);
-    remainder = remainder * maxDecimalPart - decimalPart;
+    remainder = remainder * maxDecimalPart - JsonFloat(decimalPart);
 
     // rounding
     if (remainder > 0.5) {

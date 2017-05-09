@@ -29,12 +29,12 @@ TEST_CASE("JsonVariant::printTo()") {
     check("hello", "\"hello\"");
   }
 
-  SECTION("DoubleZero") {
-    check(0.0, "0.00");
+  SECTION("Double Zero") {
+    check(0.0, "0");
   }
 
-  SECTION("DoubleDefaultDigits") {
-    check(3.14159265358979323846, "3.14");
+  SECTION("Double") {
+    check(3.14159265358979323846, "3.1415927");
   }
 
   SECTION("Infinity") {
