@@ -53,13 +53,13 @@ TEST_CASE("JsonArray::printTo()") {
   }
 
   SECTION("OneDoubleDefaultDigits") {
-    array.add(3.14159265358979323846);
-    check(array, "[3.14]");
+    array.add(3.1415927);
+    check(array, "[3.1415927]");
   }
 
   SECTION("OneFloatDefaultDigits") {
     array.add(3.14159f);
-    check(array, "[3.14]");
+    check(array, "[3.14159]");
   }
 
   SECTION("OneInteger") {
