@@ -29,28 +29,8 @@ TEST_CASE("JsonVariant::printTo()") {
     check("hello", "\"hello\"");
   }
 
-  SECTION("Double Zero") {
-    check(0.0, "0");
-  }
-
   SECTION("Double") {
-    check(3.14159265358979323846, "3.1415927");
-  }
-
-  SECTION("Infinity") {
-    check(std::numeric_limits<double>::infinity(), "Infinity");
-  }
-
-  SECTION("MinusInfinity") {
-    check(-std::numeric_limits<double>::infinity(), "-Infinity");
-  }
-
-  SECTION("SignalingNaN") {
-    check(std::numeric_limits<double>::signaling_NaN(), "NaN");
-  }
-
-  SECTION("QuietNaN") {
-    check(std::numeric_limits<double>::quiet_NaN(), "NaN");
+    check(3.1415927, "3.1415927");
   }
 
   SECTION("Integer") {

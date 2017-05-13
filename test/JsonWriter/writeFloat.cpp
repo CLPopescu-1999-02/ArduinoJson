@@ -28,8 +28,13 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(3.14159265359, "3.141592654");
   }
 
-  SECTION("NaN") {
+  SECTION("Signaling NaN") {
     double nan = std::numeric_limits<double>::signaling_NaN();
+    check(nan, "NaN");
+  }
+
+  SECTION("Quiet NaN") {
+    double nan = std::numeric_limits<double>::quiet_NaN();
     check(nan, "NaN");
   }
 
