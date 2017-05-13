@@ -24,6 +24,10 @@ void check(double input, const std::string& expected) {
 }
 
 TEST_CASE("JsonWriter::writeFloat()") {
+  SECTION("Pi") {
+    check(3.14159265359, "3.141592654");
+  }
+
   SECTION("NaN") {
     double nan = std::numeric_limits<double>::signaling_NaN();
     check(nan, "NaN");
@@ -35,38 +39,40 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(-inf, "-Infinity");
   }
 
-  SECTION("#.#") {
+  SECTION("Zero") {
     check(0.0, "0");
-    check(0.1, "0.1");
-    check(0.9, "0.9");
-
-    check(9.0, "9");
-    check(9.1, "9.1");
-    check(9.9, "9.9");
+    check(-0.0, "0");
   }
 
-  SECTION("#.##") {
-    check(0.01, "0.01");
-    check(0.99, "0.99");
-
-    check(9.01, "9.01");
-    check(9.99, "9.99");
+  SECTION("Espilon") {
+    check(2.2250738585072014E-308, "2.225073859e-308");
+    check(-2.2250738585072014E-308, "-2.225073859e-308");
   }
 
-  SECTION("#.###") {
-    check(0.001, "0.001");
-    check(0.999, "0.999");
-
-    check(9.001, "9.001");
-    check(9.999, "9.999");
+  SECTION("Max double") {
+    check(1.7976931348623157E+308, "1.797693135e308");
+    check(-1.7976931348623157E+308, "-1.797693135e308");
   }
 
-  SECTION("#.####") {
-    check(0.0001, "0.0001");
-    check(0.9999, "0.9999");
+  SECTION("Exponentation when <= 1e-5") {
+    check(1e-4, "0.0001");
+    check(1e-5, "1e-5");
 
-    check(9.0001, "9.0001");
-    check(9.9999, "9.9999");
+    check(-1e-4, "-0.0001");
+    check(-1e-5, "-1e-5");
+  }
+
+  SECTION("Exponentation when >= 1e7") {
+    check(9999999.999, "9999999.999");
+    check(10000000, "1e7");
+
+    check(-9999999.999, "-9999999.999");
+    check(-10000000, "-1e7");
+  }
+
+  SECTION("Rounding when too many decimals") {
+    check(0.000099999999999, "0.0001");
+    check(0.0000099999999999, "1e-5");
   }
 
   SECTION("9 decimal places") {
@@ -83,58 +89,5 @@ TEST_CASE("JsonWriter::writeFloat()") {
 
     check(9.0000000001, "9");
     check(9.9999999999, "10");
-  }
-
-  SECTION("##.#") {
-    check(10.0, "10");
-    check(10.1, "10.1");
-    check(10.9, "10.9");
-
-    check(99.0, "99");
-    check(99.1, "99.1");
-    check(99.9, "99.9");
-  }
-
-  SECTION("###.#") {
-    check(100.0, "100");
-    check(100.1, "100.1");
-    check(100.9, "100.9");
-
-    check(999.0, "999");
-    check(999.1, "999.1");
-    check(999.9, "999.9");
-  }
-
-  SECTION("####.#") {
-    check(1000.0, "1000");
-    check(1000.1, "1000.1");
-    check(1000.9, "1000.9");
-
-    check(9999.0, "9999");
-    check(9999.1, "9999.1");
-    check(9999.9, "9999.9");
-  }
-
-  SECTION("######.#") {
-    check(100000.0, "100000");
-    check(100000.1, "100000.1");
-    check(999999.9, "999999.9");
-  }
-
-  SECTION("########.#") {
-    check(1000000.0, "1000000");
-    check(1000000.1, "1000000.1");
-    check(9999999.9, "9999999.9");
-  }
-
-  SECTION("#e###") {
-    check(1e308, "1e308");
-    check(1e-308, "1e-308");
-    check(-1e308, "-1e308");
-    check(-1e-308, "-1e-308");
-  }
-
-  SECTION("Pi") {
-    check(3.14159265359, "3.141592654");
   }
 }

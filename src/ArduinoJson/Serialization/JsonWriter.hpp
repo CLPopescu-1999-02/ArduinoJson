@@ -125,7 +125,7 @@ class JsonWriter {
       if (decimalPart >= maxDecimalPart) {
         decimalPart -= maxDecimalPart;
         integralPart++;
-        if (powersOf10 > 0 && integralPart >= 10) {
+        if (powersOf10 && integralPart >= 10) {
           powersOf10++;
           integralPart /= 10;
         }
