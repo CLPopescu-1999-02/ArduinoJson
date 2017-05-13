@@ -98,8 +98,8 @@ class JsonWriter {
   }
 
   void writeFloat(JsonFloat value) {
-    const uint8_t maxDecimalPlaces = 7;
-    const JsonUInt maxDecimalPart = 10000000;
+    const uint8_t maxDecimalPlaces = 9;
+    const uint32_t maxDecimalPart = 1000000000;
 
     if (Polyfills::isNaN(value)) return writeRaw("NaN");
 
@@ -113,10 +113,10 @@ class JsonWriter {
     // TODO: use short
     int powersOf10 = Polyfills::normalize(value);
 
-    JsonUInt integralPart = static_cast<JsonUInt>(value);
+    uint32_t integralPart = static_cast<uint32_t>(value);
     JsonFloat remainder = value - static_cast<JsonFloat>(integralPart);
 
-    JsonUInt decimalPart = JsonUInt(remainder * maxDecimalPart);
+    uint32_t decimalPart = uint32_t(remainder * maxDecimalPart);
     remainder = remainder * maxDecimalPart - JsonFloat(decimalPart);
 
     // rounding
@@ -149,7 +149,8 @@ class JsonWriter {
     }
   }
 
-  void writeInteger(JsonUInt value) {
+  template <typename UInt>
+  void writeInteger(UInt value) {
     char buffer[22];
     char *ptr = buffer + sizeof(buffer) - 1;
 
@@ -162,7 +163,7 @@ class JsonWriter {
     writeRaw(ptr);
   }
 
-  void writeDecimals(JsonUInt value, int8_t n) {
+  void writeDecimals(uint32_t value, int8_t n) {
     // remove trailing zeros
     while (value % 10 == 0 && n > 0) {
       value /= 10;

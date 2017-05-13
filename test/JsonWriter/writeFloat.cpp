@@ -69,6 +69,22 @@ TEST_CASE("JsonWriter::writeFloat()") {
     check(9.9999, "9.9999");
   }
 
+  SECTION("9 decimal places") {
+    check(0.100000001, "0.100000001");
+    check(0.999999999, "0.999999999");
+
+    check(9.000000001, "9.000000001");
+    check(9.999999999, "9.999999999");
+  }
+
+  SECTION("10 decimal places") {
+    check(0.1000000001, "0.1");
+    check(0.9999999999, "1");
+
+    check(9.0000000001, "9");
+    check(9.9999999999, "10");
+  }
+
   SECTION("##.#") {
     check(10.0, "10");
     check(10.1, "10.1");
@@ -119,6 +135,6 @@ TEST_CASE("JsonWriter::writeFloat()") {
   }
 
   SECTION("Pi") {
-    check(3.14159265359, "3.1415927");
+    check(3.14159265359, "3.141592654");
   }
 }
