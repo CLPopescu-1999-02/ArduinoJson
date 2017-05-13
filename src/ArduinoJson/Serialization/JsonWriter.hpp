@@ -83,23 +83,10 @@ class JsonWriter {
     }
   }
 
-  int8_t getDecimalPlaces(JsonFloat value) {
-    int8_t result = 0;
-    JsonFloat error = 1e-6;
-    while (value > error && result < 6) {
-      // Extract digit
-      value *= 10.0;
-      error *= 10.0;
-      char currentDigit = char(value);
-      value -= static_cast<JsonFloat>(currentDigit);
-      result++;
-    }
-    return result;
-  }
-
   void writeFloat(JsonFloat value) {
-    const uint8_t maxDecimalPlaces = 9;
-    const uint32_t maxDecimalPart = 1000000000;
+    const uint8_t maxDecimalPlaces = sizeof(JsonFloat) >= 8 ? 9 : 6;
+    const uint32_t maxDecimalPart =
+        sizeof(JsonFloat) >= 8 ? 1000000000 : 1000000;
 
     if (Polyfills::isNaN(value)) return writeRaw("NaN");
 
