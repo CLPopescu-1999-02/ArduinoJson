@@ -110,8 +110,7 @@ class JsonWriter {
 
     if (Polyfills::isInfinity(value)) return writeRaw("Infinity");
 
-    // TODO: use short
-    int powersOf10 = Polyfills::normalize(value);
+    int16_t powersOf10 = Polyfills::normalize(value);
 
     uint32_t integralPart = static_cast<uint32_t>(value);
     JsonFloat remainder = value - static_cast<JsonFloat>(integralPart);
