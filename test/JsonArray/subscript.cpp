@@ -31,7 +31,7 @@ TEST_CASE("JsonArray::operator[]") {
     _array[0] = 9223372036854775807;
     REQUIRE(9223372036854775807 == _array[0].as<long long>());
     REQUIRE(true == _array[0].is<int>());
-    REQUIRE(false == _array[0].is<double>());
+    REQUIRE(false == _array[0].is<bool>());
   }
 #endif
 
