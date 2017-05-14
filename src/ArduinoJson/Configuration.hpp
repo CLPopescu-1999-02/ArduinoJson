@@ -13,6 +13,7 @@
 #endif
 
 // control the exponentiation threshold for big numbers
+// CAUTION: cannot be more that 1e9 !!!!
 #ifndef ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD
 #define ARDUINOJSON_POSITIVE_EXPONENTIATION_THRESHOLD 1e7
 #endif
