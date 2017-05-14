@@ -143,7 +143,7 @@ class JsonWriter {
     *ptr = 0;
     do {
       *--ptr = static_cast<char>(value % 10 + '0');
-      value /= 10;
+      value = UInt(value / 10);
     } while (value);
 
     writeRaw(ptr);
