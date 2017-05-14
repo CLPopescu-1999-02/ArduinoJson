@@ -9,7 +9,7 @@ HEAD
 * Fixed error `IsBaseOf is not a member of ArduinoJson::TypeTraits` (issue #495)
 * Fixed error `forming reference to reference` (issue #495)
 
-**BREAKING CHANGES**
+### BREAKING CHANGES :warning:
 
 | Old syntax                      | New syntax          |
 |---------------------------------|---------------------|
@@ -17,6 +17,19 @@ HEAD
 | `float_with_n_digits(3.14, 2)`  | `3.14f`             |
 | `obj.set("key", 3.14, 2)`       | `obj["key"] = 3.14` |
 | `arr.add(3.14, 2)`              | `arr.add(3.14)`     |
+
+| Input     | Old output | New output |
+|-----------|------------|------------|
+| 3.14159   | 3.14       | 3.14159    |
+| 42.0      | 42.00      | 42         |
+| 0.0       | 0.00       | 0          |
+
+| Expression                   | Old result | New result |
+|------------------------------|------------|------------|
+| JsonVariant(42).is<int>()    | `true`     | `true`     |
+| JsonVariant(42).is<float>()  | `false`    | `true`     |
+| JsonVariant(42).is<double>() | `false`    | `true`     |
+
 
 v5.9.0
 ------
@@ -70,7 +83,8 @@ v5.8.0
 * Added support for `Stream` (issue #300)
 * Reduced memory consumption by not duplicating spaces and comments
 
-**BREAKING CHANGES**:
+### BREAKING CHANGES :warning:
+
 
 `JsonBuffer::parseObject()` and  `JsonBuffer::parseArray()` have been pulled down to the derived classes `DynamicJsonBuffer` and `StaticJsonBufferBase`.
 
@@ -119,7 +133,8 @@ v5.7.0
 * Added example `StringExample.ino` to show where `String` can be used
 * Increased default nesting limit to 50 when compiled for a computer (issue #349)
 
-**BREAKING CHANGES**:
+### BREAKING CHANGES :warning:
+
 
 The non-template functions `JsonObject::get()` and `JsonArray.get()` have been removed. This means that you need to explicitely tell the type you expect in return.
 
@@ -246,7 +261,8 @@ v5.0.7
 * Made library easier to use from a CMake project: simply `add_subdirectory(ArduinoJson/src)`
 * Changed `String` to be a `typedef` of `std::string` (issues #142 and #161)
 
-**BREAKING CHANGES**:
+### BREAKING CHANGES :warning:
+
 - `JsonVariant(true).as<String>()` now returns `"true"` instead of `"1"`
 - `JsonVariant(false).as<String>()` now returns `"false"` instead of `"0"`
 
@@ -302,7 +318,8 @@ v5.0.0
 * Redesigned `JsonVariant` to leverage converting constructors instead of assignment operators (issue #66)
 * Switched to new the library layout (requires Arduino 1.0.6 or above)
 
-**BREAKING CHANGES**:
+### BREAKING CHANGES :warning:
+
 - `JsonObject::add()` was renamed to `set()`
 - `JsonArray::at()` and `JsonObject::at()` were renamed to `get()`
 - Number of digits of floating point value are now set with `double_with_n_digits()`
