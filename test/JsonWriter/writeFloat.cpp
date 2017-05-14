@@ -24,7 +24,9 @@ void check(double input, const std::string& expected) {
 }
 
 TEST_CASE("JsonWriter::writeFloat()") {
-  SECTION("Pi") { check(3.14159265359, "3.141592654"); }
+  SECTION("Pi") {
+    check(3.14159265359, "3.141592654");
+  }
 
   SECTION("Signaling NaN") {
     double nan = std::numeric_limits<double>::signaling_NaN();
@@ -59,8 +61,8 @@ TEST_CASE("JsonWriter::writeFloat()") {
 
   SECTION("Big exponent") {
     // this test increases coverage of normalize()
-    check(1e200, "1e200");
-    check(1e-200, "1e-200");
+    check(1e255, "1e255");
+    check(1e-255, "1e-255");
   }
 
   SECTION("Exponentation when <= 1e-5") {
